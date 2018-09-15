@@ -1,0 +1,48 @@
+Question: Order food in a restaurant.
+
+Objects and Behaviors:
+Customer:
+Data: food, drink
+Behaviors: order, checkOut, tip
+
+Waiter:
+Data: menu
+Behavior: receiveOrder, serveDishes, checkOut
+
+CreditCard:
+Data: cardNumber, name, expiry, securityCode, company
+Behaviors:
+
+CreditCardCompany:
+Data:
+Behaviors: authorizeTransaction
+
+Sequence of invoking behaviors on Objects:
+
+	Customer peter,
+	Waiter kevin,
+	CreditCard card,
+	CreditCardCompany visa,
+
+	peter.enterRestaurant
+	kevin.menu -> menu
+	loop
+		if peter.readyToOrder || peter.wantToAddDishes
+			peter.order -> food, drink
+			kevin.receiveOrders
+		end
+		if peter.isFull
+			break
+		end
+	end
+
+	if peter.isFull
+		kevin.checkOut
+		peter.checkOut -> creditCard
+		peter.tip -> creditCard
+		if visa.authorizeTransaction
+			peter.success
+		else
+			peter.useCash
+		end
+	end

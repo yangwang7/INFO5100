@@ -1,0 +1,51 @@
+Question: Design a course registration platform.
+
+Objects and Behaviors:
+Student:
+Data: name, studentId, studentPassword
+Behaviors: login, logout, searchForCourse, registerCourse, cancelCourse, waitlist
+
+Professor:
+Data: name, workId, professorPassword
+Behaviors: login, logout, offerCourse
+
+Platform:
+Data: courseName, courseTime, coursePlace, courseDescription, professorName, professorDescription
+Behaviors: registerSuccessfully, registerUnsuccessfully, fullClassNotice, waitlistNotice
+
+Sequence of invoking behaviors on Objects:
+
+CourseRegistrationPlatform:
+
+	Student peter,
+	Internet internet,
+	Platform platform,
+	Course course,
+
+	if Internet.isAvailable
+		peter.register -> studentId, studentPassword, platform.authorize
+		loop
+			peter.findDesirableCourse -> courseName, courseTime, coursePlace, courseDescription, professorName, professorDescription
+			peter.registerCourse
+			
+			if course.isAvailable
+				platform.registerSuccessfully
+			else if course.isFull && course.waitlistIsNotFull
+				platform.registerUnsuccessfully
+				platform.waitlistNotice
+				if peter.stillWantToRegister
+					peter.waitlist
+				end
+			else if course.isFull && course.waitlistIsFull
+				platform.registerUnsuccessfully
+				platform.fullClassNotice
+			end
+
+			if peter.hasRegisteredAllDesirableCourse
+				break
+			end
+		end
+		peter.logout
+	else
+		peter.tryLater
+	end

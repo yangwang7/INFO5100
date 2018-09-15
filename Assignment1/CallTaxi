@@ -1,0 +1,49 @@
+Question: Design an app for calling taxis (e.g. Uber).
+
+Objects and Behaviors:
+Customer:
+Data: location, destination, phoneNumber
+Behaviors: placeAnOrder, cancelAnOrder
+
+App:
+Data:
+Behaviors: receiveAnOrder, searchForNearbyTaxies, sendOrders, authorize
+
+Taxi:
+Data: type, price, location
+Behaviors: receiveOrders, takeAnOrder
+
+CreditCard:
+Data: cardNumber, name, expiry, securityCode, company
+Behaviors:
+
+CreditCardCompany:
+Data:
+Behaviors: authorizeTransaction
+Sequence of invoking behaviors on Objects:
+
+CallTaxi:
+
+	Customer peter,
+	App Uber,
+	Internet internet,
+	Taxi taxi,
+
+	if Internet.isAvailable
+		peter.register -> name, phoneNumber, creditCard, app.authorize
+		peter.placeAnOrder -> internet, location, destination, type
+		Uber.receiveAnOrder
+		Uber.searchForNearbyTaxies -> location, destination
+		Uber.sendOrders
+		taxi.receiveOrders
+		if taxi.noCustomer
+			taxi.takeAnOrder -> App: Confirmation 
+			response = Confirmation
+			peter.successOrder
+			taxi.successOrder
+		else
+			peter.waitForAnotherTaxi
+		end
+	else
+		peter.tryLater
+	end

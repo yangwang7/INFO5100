@@ -1,0 +1,42 @@
+Question: Design a job searching and posting platform.
+
+Objects and Behaviors:
+User:
+Data: name, email, targetPosition, resume
+Behaviors: searchForJobs, uploadResume
+
+Employers:
+Data: position
+Behaviors: publishJobs, receiveResume, sendInterviewNotice, refuseResume
+
+Platform:
+Data:
+Behaviors: receiveResume, authorize
+
+Sequence of invoking behaviors on Objects:
+
+JobPlatform:
+
+	User peter,
+	Employer employer,
+	Internet internet,
+
+	if Internet.isAvailable
+		loop
+			peter.searchInternet -> internet, question: Collection of ElectronicWebsites
+			peter.register -> name, email, platform.authorize
+			if peter.findDesirabeJob -> position, salary, workTime
+				peter.uploadResume
+				break
+			end
+		end
+		Platform.receiveResume
+		Platform.sendItToEmployer
+		employer.receiveResume
+		if employer.satisfyWithResume
+			employer.sendInterviewNotice
+		else 
+			employer.refuseResume
+	else
+		peter.tryLater
+	end

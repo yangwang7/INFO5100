@@ -1,0 +1,70 @@
+Question: Order a hotel online before a trip.
+
+Objects and Behaviors:
+Customer: 
+Data: checkInTime, checkOutTime, destination
+Behaviors: search, compare, order, cancel
+
+Hotel:
+Data: address
+Behaviors:
+
+Room:
+Data: type, price
+Behaviors:
+
+Internet:
+Data: Hilton, RitzCarlton, Plaza
+      :Collection of Websites
+Behaviors: searchForElectronicWebsites
+
+ElectronicWebsite
+Data: URL, hotel, room, bankAccount
+Behaviors: search, sort, display, compare, placeTheOrder, cancelTheOrder
+
+CreditCard:
+Data: cardNumber, name, expiry, securityCode, company
+Behaviors:
+
+CreditCardCompany:
+Data:
+Behaviors: authorizeTransaction
+
+Sequence of invoking behaviors on Objects:
+
+OrderHotelOnline:
+
+	Customer peter,
+	Internet internet,
+	ElectronicWebsite Hilton,
+	Room room106,
+	CreditCard card,
+	CreditCardCompany visa,
+	OrderConfirmation response,
+
+	if Internet.isAvailable
+		peter.searchInternet -> internet, question: Collection of ElectronicWebsites
+		loop
+			peter.findDesirableHotel -> checkInTime, checkOutTime, destination, Collection of ElectronicWebsites: website
+			if Hilton.isAvailable
+				break
+			end
+		end
+		Hilton = website
+
+		if Hilton.isAvailable
+			loop
+				Hotel.searchForRoom -> type, price, checkInTime, checkOutTime
+				if room106.isAvailable
+					break
+				end
+			end
+			room106 = room
+			peter.orderRoom -> room106, creditCard, checkInTime, checkOutTime, Hiltom: orderConfirmation
+			response = orderConfirmation
+		else
+			peter.cantOrderHotel
+		end
+	else
+		peter.tryLater
+	end
